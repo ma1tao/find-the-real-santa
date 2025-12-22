@@ -41,7 +41,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white relative z-20">
-      <MusicPlayer />
+      <MusicPlayer level={level} />
       
       {gameState === GameState.START && (
         <StartScreen onStart={startGame} highScore={highScore} />

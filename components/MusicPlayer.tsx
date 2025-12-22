@@ -1,11 +1,21 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-const MusicPlayer: React.FC = () => {
+interface MusicPlayerProps {
+  level: number;
+}
+
+const MusicPlayer: React.FC<MusicPlayerProps> = ({ level }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const nextNoteTimeRef = useRef(0);
   const timerIDRef = useRef<number | null>(null);
+  const levelRef = useRef(level);
+
+  // 更新 ref 以便在 scheduler 中获取最新 level
+  useEffect(() => {
+    levelRef.current = level;
+  }, [level]);
 
   // Melody: We Wish You a Merry Christmas
   // G4, C5, C5, D5, C5, B4, A4, A4...
@@ -78,8 +88,18 @@ const MusicPlayer: React.FC = () => {
   const scheduler = () => {
     while (nextNoteTimeRef.current < audioCtxRef.current!.currentTime + 0.1) {
       const noteObj = melody[currentNoteIndex.current];
-      playNote(noteObj.note, nextNoteTimeRef.current, noteObj.dur);
-      nextNoteTimeRef.current += noteObj.dur + 0.02;
+      
+      // 根据关卡计算速度倍率
+      // 基础速度 1.0，每关增加 0.02，最高 2.0 倍速
+      const speedMultiplier = Math.min(2.0, 1.0 + (levelRef.current - 1) * 0.02);
+      
+      // 调整音符持续时间（速度越快，持续时间越短）
+      const adjustedDuration = noteObj.dur / speedMultiplier;
+      
+      playNote(noteObj.note, nextNoteTimeRef.current, adjustedDuration);
+      
+      // 下一个音符的时间也相应缩短
+      nextNoteTimeRef.current += adjustedDuration + (0.02 / speedMultiplier);
       currentNoteIndex.current = (currentNoteIndex.current + 1) % melody.length;
     }
     timerIDRef.current = window.setTimeout(scheduler, 25);

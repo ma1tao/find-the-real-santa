@@ -1,20 +1,46 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎅 寻找圣诞老人 (Find the Real Santa)
 
-# Run and deploy your AI Studio app
+在这个充满节日氛围的趣味小游戏中，你需要练就一双火眼金睛，从茫茫多的“鳌拜”中找出真正的圣诞老人！
 
-This contains everything you need to run your app locally.
+## 🎮 游戏玩法
 
-View your app in AI Studio: https://ai.studio/apps/drive/1UCkF2-Jz6mk0IW2QlWH4FE7_okphjteG
+1.  **观察**：屏幕上会出现许多个红帽子白胡子的老爷爷头像。
+2.  **分辨**：仔细看！大部分是徐锦江饰演的“鳌拜”（中国版圣诞老人），只有一个是真正的西方圣诞老人。
+3.  **点击**：找出真正的圣诞老人并点击他。
+4.  **升级**：每找对一次，难度就会升级！网格会变得更密，干扰项也会更多。
+5.  **挑战**：看看你能坚持到第几关？如果不小心点到了鳌拜，游戏就结束啦！
 
-## Run Locally
+## ✨ 游戏特色
 
-**Prerequisites:**  Node.js
+*   **魔性设定**：玩梗“红帽子白胡子老人”，让鳌拜与圣诞老人同台竞技。
+*   **无尽模式**：关卡无限，难度递增，挑战你的眼力和手速。
+*   **欢乐音效**：包含经典的圣诞背景音乐（We Wish You a Merry Christmas）和有趣的点击反馈音效。
+*   **节日氛围**：精美的圣诞主题界面，飘落的雪花，闪烁的彩灯，沉浸感十足。
+*   **彩蛋语音**：点错时会有惊喜提示：“金钩拜，金钩拜，金钩鳌了拜！”
 
+## 🚀 如何运行
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+**前提条件：** Node.js 环境
+
+1.  **安装依赖**：
+    ```bash
+    npm install
+    ```
+
+2.  **启动游戏**：
+    ```bash
+    npm run dev
+    ```
+
+3.  **开始游玩**：
+    打开浏览器访问 `http://localhost:3000` 即可开始挑战！
+
+## 🛠️ 技术栈
+
+*   React 19
+*   TypeScript
+*   Vite
+*   Tailwind CSS
+
+---
+祝大家圣诞快乐！Merry Christmas! 🎄🎁

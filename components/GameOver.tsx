@@ -19,11 +19,11 @@ const GameOver: React.FC<GameOverProps> = ({ score, highScore, onRestart }) => {
       <div className="space-y-4 mb-12">
         <div className="flex justify-between items-center p-5 bg-white/5 rounded-2xl border border-white/10">
           <span className="text-gray-400 font-bold">本次得分</span>
-          <span className="text-4xl font-black text-red-500">第 {score} 关</span>
+          <span className="text-4xl font-black text-red-500">{score}</span>
         </div>
         <div className="flex justify-between items-center p-5 bg-yellow-500/5 rounded-2xl border border-yellow-500/30">
-          <span className="text-gray-400 font-bold">最高关卡</span>
-          <span className="text-4xl font-black text-yellow-500">第 {highScore} 关</span>
+          <span className="text-gray-400 font-bold">最高纪录</span>
+          <span className="text-4xl font-black text-yellow-500">{highScore}</span>
         </div>
         {isNewRecord && (
           <div className="text-yellow-400 text-2xl font-black animate-pulse tracking-widest mt-4">

@@ -4,15 +4,20 @@ import { SETTINGS } from '../constants';
 
 interface GameGridProps {
   level: number;
-  onCorrect: () => void;
+  onCorrect: (scoreEarned: number) => void;
   onWrong: () => void;
 }
 
 const GameGrid: React.FC<GameGridProps> = ({ level, onCorrect, onWrong }) => {
-  const gridSize = level + 1;
+  const gridSize = level;
   const totalCells = gridSize * gridSize;
   const [feedback, setFeedback] = useState<{ x: number, y: number, text: string } | null>(null);
   const [isShaking, setIsShaking] = useState(false);
+  const startTimeRef = React.useRef(Date.now());
+
+  React.useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, [level]);
 
   // 确保图片路径正确
   const santaImgPath = SETTINGS.santaImg;
@@ -57,15 +62,31 @@ const GameGrid: React.FC<GameGridProps> = ({ level, onCorrect, onWrong }) => {
 
   const handleClick = (idx: number, e: React.MouseEvent) => {
     if (idx === santaIndex) {
+      const timeSpent = (Date.now() - startTimeRef.current) / 1000;
+      
+      // 评分逻辑
+      const baseScore = 1000;
+      let scoreEarned = 0;
+      
+      if (timeSpent <= 10) {
+        // 10秒内：基础分 + 时间奖励
+        const timeBonus = Math.floor((10 - timeSpent) * 100 * level);
+        scoreEarned = baseScore + timeBonus;
+      } else {
+        // 超过10秒：基础分衰减
+        // 每超1秒扣 50 分，最低 100 分
+        const penalty = Math.floor((timeSpent - 10) * 50);
+        scoreEarned = Math.max(100, baseScore - penalty);
+      }
+
       playSound('correct');
-      const messages = ['好耶！🎅', '找到了！🎄', '圣诞快乐！✨', '你是天才！🎁'];
-      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-      setFeedback({ x: e.clientX, y: e.clientY, text: randomMsg });
+      // 显示获得的分数
+      setFeedback({ x: e.clientX, y: e.clientY, text: `+${scoreEarned} 分!` });
       
       setTimeout(() => {
         setFeedback(null);
-        onCorrect();
-      }, 500);
+        onCorrect(scoreEarned);
+      }, 800);
     } else {
       playSound('wrong');
       setIsShaking(true);

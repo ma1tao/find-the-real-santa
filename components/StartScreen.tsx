@@ -28,7 +28,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, highScore }) => {
       
       {highScore > 0 && (
         <div className="mb-8 p-4 bg-yellow-500/10 rounded-2xl border border-yellow-500/30">
-          <p className="text-yellow-400 font-bold text-lg">历史最高纪录：第 {highScore} 关</p>
+          <p className="text-yellow-400 font-bold text-lg">历史最高纪录：{highScore} 分</p>
         </div>
       )}
 
@@ -47,7 +47,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart, highScore }) => {
         <span className="text-gray-500">VS</span>
         <div className="text-center">
             <img src={SETTINGS.aobaiImg} className="w-12 h-12 rounded-full mx-auto border-2 border-red-500 mb-1" />
-            <span className="text-xs text-red-400 font-bold">鳌拜 (干扰项)</span>
+            <span className="text-xs text-red-400 font-bold">鳌拜</span>
         </div>
       </div>
     </div>

@@ -10,10 +10,11 @@ import MusicPlayer from './components/MusicPlayer';
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>(GameState.START);
   const [level, setLevel] = useState(1);
+  const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(STORAGE_KEY + '_score');
     if (saved) {
       setHighScore(parseInt(saved, 10));
     }
@@ -21,17 +22,19 @@ const App: React.FC = () => {
 
   const startGame = () => {
     setLevel(1);
+    setScore(0);
     setGameState(GameState.PLAYING);
   };
 
-  const nextLevel = () => {
+  const nextLevel = (scoreEarned: number) => {
+    setScore(prev => prev + scoreEarned);
     setLevel(prev => prev + 1);
   };
 
   const endGame = () => {
-    if (level > highScore) {
-      setHighScore(level);
-      localStorage.setItem(STORAGE_KEY, level.toString());
+    if (score > highScore) {
+      setHighScore(score);
+      localStorage.setItem(STORAGE_KEY + '_score', score.toString());
     }
     setGameState(GameState.GAMEOVER);
   };
@@ -63,8 +66,8 @@ const App: React.FC = () => {
 
           <div className="mt-8 flex gap-12 text-2xl bg-black/40 px-8 py-3 rounded-full backdrop-blur-sm border border-white/10">
              <div className="flex flex-col items-center">
-                <span className="text-gray-400 text-sm">当前关卡</span>
-                <span className="font-bold text-white">{level}</span>
+                <span className="text-gray-400 text-sm">当前得分</span>
+                <span className="font-bold text-white">{score}</span>
              </div>
              <div className="flex flex-col items-center">
                 <span className="text-gray-400 text-sm">最高纪录</span>
@@ -76,7 +79,7 @@ const App: React.FC = () => {
 
       {gameState === GameState.GAMEOVER && (
         <GameOver 
-          score={level} 
+          score={score} 
           highScore={highScore} 
           onRestart={startGame} 
         />

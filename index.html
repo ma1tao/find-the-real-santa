@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寻找圣诞老人 - 圣诞挑战</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&display=swap');
+        
+        body {
+            font-family: 'Ma Shan Zheng', cursive, sans-serif;
+            background-color: #050b16;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* 圣诞背景装饰 */
+        .christmas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #050b16 0%, #1a3a3a 100%);
+            z-index: -3;
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px);
+            background-size: 100px 100px;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        /* 装饰性圣诞树林 */
+        .forest {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            z-index: -1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .tree {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 100px solid #064e3b;
+            position: relative;
+        }
+        .tree::before {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -30px;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 80px solid #064e3b;
+        }
+        .tree::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -20px;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 60px solid #064e3b;
+        }
+
+        .decorative-lights {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 50px;
+            background-image: radial-gradient(circle, #ff0000 3px, transparent 4px),
+                              radial-gradient(circle, #00ff00 3px, transparent 4px),
+                              radial-gradient(circle, #ffff00 3px, transparent 4px);
+            background-size: 60px 60px;
+            background-position: 0 0, 20px 20px, 40px 5px;
+            opacity: 0.7;
+            z-index: 5;
+            animation: twinkle 1.5s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.4; filter: blur(1px); }
+            to { opacity: 0.9; filter: blur(0px); }
+        }
+
+        .snowflake {
+            color: #fff;
+            position: fixed;
+            top: -10%;
+            z-index: 10;
+            user-select: none;
+            cursor: default;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* 反馈动画 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .animate-shake {
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+
+        @keyframes flash-red {
+            0%, 100% { background-color: transparent; }
+            50% { background-color: rgba(220, 38, 38, 0.4); }
+        }
+        .animate-flash-red {
+            animation: flash-red 0.4s ease-in-out;
+        }
+
+        @keyframes pop-up {
+            0% { transform: scale(0.5) translateY(0); opacity: 0; }
+            50% { transform: scale(1.3) translateY(-20px); opacity: 1; }
+            100% { transform: scale(1) translateY(-40px); opacity: 0; }
+        }
+        .feedback-pop {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            animation: pop-up 0.8s forwards;
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            font-family: 'Zhi Mang Xing', cursive;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <div class="christmas-bg"></div>
+    <div class="stars"></div>
+    <div class="forest">
+        <div class="tree" style="transform: scale(0.8);"></div>
+        <div class="tree" style="transform: scale(1.2); opacity: 0.6;"></div>
+        <div class="tree" style="transform: scale(0.9);"></div>
+        <div class="tree" style="transform: scale(1.1); opacity: 0.5;"></div>
+        <div class="tree" style="transform: scale(0.7);"></div>
+    </div>
+    <div class="decorative-lights"></div>
+    <div class="snow-bg" id="global-overlay" style="position:fixed; inset:0; pointer-events:none; z-index:50;"></div>
+    <script>
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.innerHTML = Math.random() > 0.5 ? '❄' : '❅';
+            snowflake.classList.add('snowflake');
+            snowflake.style.left = Math.random() * 100 + 'vw';
+            snowflake.style.animationDuration = Math.random() * 3 + 4 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 15 + 10 + 'px';
+            document.body.appendChild(snowflake);
+            setTimeout(() => snowflake.remove(), 7000);
+        }
+        setInterval(createSnowflake, 200);
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
